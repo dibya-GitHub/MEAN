@@ -2,6 +2,36 @@
 const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
+    firstName: {
+        type: String
+    },
+    lastName: {
+        type: String
+    },
+    country: {
+        type: String
+    },
+    mobileNumber: {
+        type: String
+    },
+    pinCode: {
+        type: String
+    },
+    address1: {
+        type: String
+    },
+    address2: {
+        type: String
+    },
+    landMark: {
+        type: String
+    },
+    state: {
+        type: String
+    },
+    addressType: {
+        type: String
+    },
     username: {
         type: String,
         required: true
@@ -15,6 +45,10 @@ const UserSchema = mongoose.Schema({
         required: true
     },
     createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    updatedAt: {
         type: Date,
         default: Date.now()
     }

@@ -30,7 +30,20 @@ router.post(
       });
     }
 
-    const { username, email, password } = req.body;
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      country,
+      state,
+      mobileNumber,
+      pinCode,
+      address1,
+      address2,
+      landMark,
+      addressType } = req.body;
     try {
       let user = await User.findOne({
         email,
@@ -42,9 +55,19 @@ router.post(
       }
 
       user = new User({
+        firstName,
+        lastName,
         username,
         email,
         password,
+        country,
+        state,
+        mobileNumber,
+        pinCode,
+        address1,
+        address2,
+        landMark,
+        addressType,
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -67,7 +90,10 @@ router.post(
         (err, token) => {
           if (err) throw err;
           res.status(200).json({
-            token,
+            userData: { "username": user.username, "email": user.email, "firstName": user.firstName, "lastName": user.lastName },
+            "token": token,
+            statusCode: 200,
+            statusMessage: "User Created Successfully",
           });
         }
       );
@@ -151,10 +177,68 @@ router.get("/me", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
     const user = await User.findById(req.user.id);
-    res.json(user);
+    user.password = null
+    res.json({
+      "userData": {
+        "email": user.email,
+        "username": user.username,
+        "password": null,
+        "createdAt": user.createdAt
+      }
+    });
   } catch (e) {
     res.send({ message: "Error in Fetching user" });
   }
 });
 
+router.get("/profile/me", auth, async (req, res) => {
+  try {
+    // request.user is getting fetched from Middleware after token authentication
+    const user = await User.findById(req.user.id);
+    res.json({
+      "userData": {
+        "firstName": user.firstName,
+        "lastName": user.lastName,
+        "createdAt": user.createdAt,
+        "country": user.country,
+        "state": user.state,
+        "mobileNumber": user.mobileNumber,
+        "pinCode": user.pinCode,
+        "address1": user.address1,
+        "address2": user.address2,
+        "landMark": user.landMark,
+        "addressType": user.addressType,
+      }
+    });
+  } catch (e) {
+    res.send({ message: "Error in Fetching user" });
+  }
+});
+
+router.put("/profile/me", (req, res) => {
+  updateProfileRecord(req, res);
+});
+function updateProfileRecord(req, res) {
+  User.findOneAndUpdate(
+    { _id: req.body._id },
+    req.body,
+    { new: true },
+    (err, doc) => {
+      if (!err) {
+        doc.updatedAt = new Date();
+        res.status(200).json({
+          status: "Success",
+          statusCode: 200,
+          userData: doc,
+        });
+      } else {
+        res.status(400).json({
+          errorMessage: "Missing required parameter",
+          status: "BAD_REQUEST",
+          statusCode: 400,
+        });
+      }
+    }
+  );
+}
 module.exports = router;
