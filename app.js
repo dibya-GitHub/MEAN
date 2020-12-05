@@ -3,8 +3,11 @@ const express = require("express"),
   app = express(),
   bodyParser = require("body-parser"),
   cors = require("cors"),
-  employeeController = require("./controllers/employeeController");
-userController = require("./controllers/userController");
+  employeeController = require("./controllers/employeeController"),
+  userController = require("./controllers/userController"),
+  countryController = require("./controllers/countryController"),
+  categoryController = require("./controllers/categoryController");
+
 var corsOptions = {
   origin: 'http://localhost:4200',
   credentials: true
@@ -28,5 +31,7 @@ console.log(
 app.get("/", (req, res) => {
   res.send("Welcome to Dibya's App");
 });
+app.use("/country", countryController);
 app.use("/employee", employeeController);
 app.use("/auth/user", userController);
+app.use("/category", categoryController);

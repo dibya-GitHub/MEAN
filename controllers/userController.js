@@ -38,12 +38,12 @@ router.post(
       password,
       country,
       state,
-      mobileNumber,
+      city,
+      mobileNo,
       pinCode,
       address1,
       address2,
-      landMark,
-      addressType } = req.body;
+      addType } = req.body;
     try {
       let user = await User.findOne({
         email,
@@ -57,17 +57,17 @@ router.post(
       user = new User({
         firstName,
         lastName,
-        username,
         email,
-        password,
+        username,
         country,
         state,
-        mobileNumber,
+        city,
         pinCode,
         address1,
         address2,
-        landMark,
-        addressType,
+        mobileNo,
+        addType,
+        password,
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -180,9 +180,9 @@ router.get("/me", auth, async (req, res) => {
     user.password = null
     res.json({
       "userData": {
+        "id": user._id,
         "email": user.email,
         "username": user.username,
-        "password": null,
         "createdAt": user.createdAt
       }
     });
@@ -197,17 +197,20 @@ router.get("/profile/me", auth, async (req, res) => {
     const user = await User.findById(req.user.id);
     res.json({
       "userData": {
+        "id": user._id,
         "firstName": user.firstName,
         "lastName": user.lastName,
-        "createdAt": user.createdAt,
         "country": user.country,
         "state": user.state,
-        "mobileNumber": user.mobileNumber,
+        "city": user.city,
+        "mobileNo": user.mobileNo,
         "pinCode": user.pinCode,
         "address1": user.address1,
         "address2": user.address2,
-        "landMark": user.landMark,
-        "addressType": user.addressType,
+        "addType": user.addType,
+        "email": user.email,
+        "username": user.username,
+        "createdAt": user.createdAt,
       }
     });
   } catch (e) {

@@ -8,10 +8,21 @@ const UserSchema = mongoose.Schema({
     lastName: {
         type: String
     },
+    email: {
+        type: String,
+        required: true
+    },
+    username: {
+        type: String,
+        required: true
+    },
     country: {
         type: String
     },
-    mobileNumber: {
+    state: {
+        type: String
+    },
+    city: {
         type: String
     },
     pinCode: {
@@ -23,22 +34,11 @@ const UserSchema = mongoose.Schema({
     address2: {
         type: String
     },
-    landMark: {
+    mobileNo: {
         type: String
     },
-    state: {
+    addType: {
         type: String
-    },
-    addressType: {
-        type: String
-    },
-    username: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
     },
     password: {
         type: String,
