@@ -3,10 +3,10 @@ const express = require("express"),
   app = express(),
   bodyParser = require("body-parser"),
   cors = require("cors"),
-  employeeController = require("./controllers/employeeController"),
-  userController = require("./controllers/userController"),
-  countryController = require("./controllers/countryController"),
-  categoryController = require("./controllers/categoryController");
+  currency = require("./controllers/currency"),
+  user = require("./controllers/user");
+  groups = require("./controllers/group");
+
 
 var corsOptions = {
   origin: 'http://localhost:4200',
@@ -20,7 +20,6 @@ app.use(
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.set("port", process.env.PORT || 3000);
-// Start the service
 app.listen(app.get("port"));
 console.log(
   "Sample node server Started @ " +
@@ -31,7 +30,7 @@ console.log(
 app.get("/", (req, res) => {
   res.send("Welcome to Dibya's App");
 });
-app.use("/country", countryController);
-app.use("/employee", employeeController);
-app.use("/auth/user", userController);
-app.use("/category", categoryController);
+app.use("/currency", currency);
+app.use("/user", user);
+app.use("/groups", groups);
+

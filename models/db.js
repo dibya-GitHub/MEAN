@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const url = "mongodb://localhost:27017/EmployeeDB";
+const url = "mongodb://localhost:27017/splitbill";
 mongoose.connect(
   url,
   { useNewUrlParser: true },
@@ -11,7 +11,3 @@ mongoose.connect(
     }
   }
 );
-require("./country.model");
-require("./employee.model");
-require("./user.model");
-require("./category.model");
