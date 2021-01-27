@@ -1,43 +1,58 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
 /* Defining collection for business */
-let userCollection = new Schema({
+let userCollection = new Schema(
+  {
     name: {
-        type: String
+      type: String,
+      required: true,
+      min: 6,
+      max: 255,
     },
     nickname: {
-        type: String
+      type: String,
     },
     email: {
-        type: String
+      type: String,
+      required: true,
+      min: 6,
+      max: 255,
+    },
+    password: {
+      type: String,
+      required: true,
+      min: 6,
+      max: 1024,
     },
     default_currency: {
-        type: String
+      type: String,
     },
     avatar: {
-        type: String
+      type: String,
     },
     profession: {
-        type: String
+      type: String,
     },
     created_at: {
-        type: Date,
-        default: new Date(),
+      type: Date,
+      default: new Date(),
     },
     created_by: {
-        type: String
+      type: String,
     },
     updated_at: {
-        type: Date,
-        default: new Date(),
+      type: Date,
+      default: new Date(),
     },
     updated_by: {
-        type: String
-    }
-}, {
-    collection: 'user_collection'
-});
+      type: String,
+    },
+  },
+  {
+    collection: "user_collection",
+  }
+);
 
-module.exports = mongoose.model('user_collection', userCollection);
+module.exports = mongoose.model("user_collection", userCollection);
