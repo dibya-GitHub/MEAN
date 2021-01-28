@@ -5,15 +5,6 @@ const Schema = mongoose.Schema;
 /* Defining collection for business */
 let userCollection = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      min: 6,
-      max: 255,
-    },
-    nickname: {
-      type: String,
-    },
     email: {
       type: String,
       required: true,
@@ -26,29 +17,56 @@ let userCollection = new Schema(
       min: 6,
       max: 1024,
     },
-    default_currency: {
+    emailConfirmed: {
       type: String,
     },
-    avatar: {
+    emailConfirmCode: {
       type: String,
     },
-    profession: {
-      type: String,
-    },
-    created_at: {
-      type: Date,
-      default: new Date(),
-    },
-    created_by: {
-      type: String,
-    },
-    updated_at: {
-      type: Date,
-      default: new Date(),
-    },
-    updated_by: {
-      type: String,
-    },
+    // name: {
+    //   type: String,
+    //   required: true,
+    //   min: 6,
+    //   max: 255,
+    // },
+    // nickname: {
+    //   type: String,
+    // },
+    // email: {
+    //   type: String,
+    //   required: true,
+    //   min: 6,
+    //   max: 255,
+    // },
+    // password: {
+    //   type: String,
+    //   required: true,
+    //   min: 6,
+    //   max: 1024,
+    // },
+    // default_currency: {
+    //   type: String,
+    // },
+    // avatar: {
+    //   type: String,
+    // },
+    // profession: {
+    //   type: String,
+    // },
+    // created_at: {
+    //   type: Date,
+    //   default: new Date(),
+    // },
+    // created_by: {
+    //   type: String,
+    // },
+    // updated_at: {
+    //   type: Date,
+    //   default: new Date(),
+    // },
+    // updated_by: {
+    //   type: String,
+    // },
   },
   {
     collection: "user_collection",

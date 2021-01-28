@@ -11,28 +11,25 @@ const express = require("express"),
   comments = require("./routes/comment_collection.routes"),
   expenses = require("./routes/expense_collection.routes"),
   authUser = require("./routes/auth");
-mongoose
-  .connect(config.MONGO_URI, {
-    useNewUrlParser: true,
-  })
-  .then(() => {
-    console.log("Connected to Database");
-  })
-  .catch((err) => {
-    console.log("Not Connected to Database ERROR! ", err);
+
+mongoose.connect(config.MONGO_URI, function (error, db) {
+  if (error) {
+    throw new Error("Database failed to connect!");
+  } else {
+    console.log("MongoDB successfully connected on port 27017.");
+  }
+  const app = express();
+  app.use(bodyParser.json());
+  app.use(cors());
+  app.use("/currency", currency);
+  app.use("/user", user);
+  app.use("/group", grouptype);
+  app.use("/expense", expenses);
+  app.use("/groups", groups);
+  app.use("/comments", comments);
+  app.use("/api/user", authUser);
+  exports.db = db;
+  app.listen(config.LISTEN_PORT, function () {
+    console.log("Express server listening on port", config.LISTEN_PORT);
   });
-
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
-app.use("/currency", currency);
-app.use("/user", user);
-app.use("/group", grouptype);
-app.use("/expense", expenses);
-app.use("/groups", groups);
-app.use("/comments", comments);
-app.use("/api/user", authUser);
-
-const server = app.listen(config.LISTEN_PORT, () => {
-  console.log("Server is running on port 3000");
 });
