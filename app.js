@@ -12,24 +12,42 @@ const express = require("express"),
   expenses = require("./routes/expense_collection.routes"),
   authUser = require("./routes/auth");
 
-mongoose.connect(config.MONGO_URI, function (error, db) {
-  if (error) {
-    throw new Error("Database failed to connect!");
-  } else {
-    console.log("MongoDB successfully connected on port 27017.");
+const corsOptions = {
+  origin: ["http://localhost:4200"],
+  credentials: true,
+  methods: "POST, PUT, OPTIONS, DELETE, GET",
+  allowedHeaders: "X-Requested-With, Content-Type",
+};
+mongoose.connect(
+  config.MONGO_URI,
+  { useNewUrlParser: true, useCreateIndex: true },
+  function (error, db) {
+    if (error) {
+      throw new Error("Database failed to connect!");
+    } else {
+      console.log("MongoDB successfully connected on port 27017.");
+    }
+    const app = express();
+    app.use(
+      bodyParser.urlencoded({
+        extended: true,
+      })
+    );
+    app.use(cors(corsOptions));
+    app.options("*", cors(corsOptions));
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
+    app.use("/currency", currency);
+    app.use("/user", user);
+    app.use("/group", grouptype);
+    app.use("/expense", expenses);
+    app.use("/groups", groups);
+    app.use("/comments", comments);
+    app.use("/api/user", authUser);
+
+    exports.db = db;
+    app.listen(config.LISTEN_PORT, function () {
+      console.log("Express server listening on port", config.LISTEN_PORT);
+    });
   }
-  const app = express();
-  app.use(bodyParser.json());
-  app.use(cors());
-  app.use("/currency", currency);
-  app.use("/user", user);
-  app.use("/group", grouptype);
-  app.use("/expense", expenses);
-  app.use("/groups", groups);
-  app.use("/comments", comments);
-  app.use("/api/user", authUser);
-  exports.db = db;
-  app.listen(config.LISTEN_PORT, function () {
-    console.log("Express server listening on port", config.LISTEN_PORT);
-  });
-});
+);

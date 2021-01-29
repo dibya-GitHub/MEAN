@@ -10,6 +10,7 @@ const express = require("express");
 const router = express.Router();
 
 router.route("/signup").post((req, res) => {
+  const NAME = req.body.name;
   const EMAIL = req.body.email;
   const PASSWORD = req.body.password;
   if (!EMAIL || !PASSWORD) {
@@ -37,30 +38,34 @@ router.route("/signup").post((req, res) => {
       return next(err);
     }
     if (existingUser) {
-      return res.status(422).send({ error: "Email is in use" });
-    }
-    hashPassword(PASSWORD, function (err, hash) {
-      if (err) {
-        return next(err);
-      }
-      const emailConfirmCode = createLinkCode("ecc");
-      const USER = {
-        email: EMAIL,
-        password: hash,
-        emailConfirmed: false,
-        emailConfirmCode: emailConfirmCode,
-      };
-      userModel.insertMany(USER, function (err, result) {
+      return res.status(422).send({ error: "Email is already exist" });
+    } else {
+      hashPassword(PASSWORD, function (err, hash) {
         if (err) {
           return next(err);
         }
-        res.json({
-          status: "Success",
-          statusCode: 200,
-          statusText: USER,
+        const emailConfirmCode = createLinkCode("ecc");
+        const USER = {
+          name: NAME,
+          email: EMAIL,
+          password: hash,
+          emailConfirmed: false,
+          emailConfirmCode: emailConfirmCode,
+        };
+        userModel.insertMany(USER, function (err, result) {
+          if (err) {
+            return next(err);
+          }
+          console.log(result);
+          res.json({
+            status: "Success",
+            statusCode: 200,
+            token: tokenForUser({ id: result[0]._id }),
+            statusText: "User Created Successfully",
+          });
         });
       });
-    });
+    }
   });
 });
 router.route("/signin").post((req, res) => {
@@ -93,6 +98,7 @@ router.route("/signin").post((req, res) => {
     if (user) {
       let isMatch = comparePassword(PASSWORD, user.password);
       if (isMatch) {
+        console.log(user);
         res.send({ token: tokenForUser({ id: user._id }) });
       } else {
         res.status(400).json({
@@ -133,7 +139,7 @@ router.route("/forgotpw").post((req, res) => {
       //     if (err) {
       //       return next(err);
       //     }
-      //     return res.send({ message: 'Thank you. Please check your email.', code: 'ef' });
+      //     return res.send({ error: 'Thank you. Please check your email.', code: 'ef' });
       //   });
       // });
     }
@@ -142,17 +148,26 @@ router.route("/forgotpw").post((req, res) => {
 
 router.get("/me", autherization, (req, res) => {
   try {
-    console.log(req.user.id);
-    const user = userModel.findById(req.user.id);
-    // console.log(user);
-    res.json({
-      userData: {
-        id: user._id,
-        email: user.email,
-      },
-    });
+    var myobj = {
+      id: req.user,
+    };
+    console.log(req.user);
+    var query = {
+      _id: ObjectID.createFromHexString(myobj.id),
+    };
+    userModel.findById(
+      query._id,
+      { password: 0, emailConfirmCode: 0 },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(result);
+        }
+      }
+    );
   } catch (e) {
-    res.send({ message: "Error in Fetching user" });
+    res.send({ error: "Error in Fetching user" });
   }
 });
 
@@ -217,7 +232,7 @@ router.route("/reset").get((req, res) => {
     // TOKEN NOT VALID
     return res.status(422).send({ error: "Reset link has expired" });
   } else {
-    return res.send({ message: "Reset link valid", timeleft: timeLeft });
+    return res.send({ error: "Reset link valid", timeleft: timeLeft });
   }
 });
 router.route("/me").get((req, res) => {});
