@@ -29,17 +29,8 @@ let userCollection = new Schema(
     nickname: {
       type: String,
     },
-    email: {
+    mobile: {
       type: String,
-      required: true,
-      min: 6,
-      max: 255,
-    },
-    password: {
-      type: String,
-      required: true,
-      min: 6,
-      max: 1024,
     },
     default_currency: {
       type: String,
