@@ -1,23 +1,24 @@
 {
-  "name": "test",
+  "name": "auth-backend",
   "version": "1.0.0",
-  "description": "connecting mongodb with nodejs",
-  "main": "app.js",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-handlebars": "^5.1.0",
-    "express-validator": "^6.6.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.6.0",
-    "mongoose": "^5.9.28",
-    "nodemon": "^2.0.4"
-  },
-  "devDependencies": {},
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "dibya ranjan sahu",
-  "license": "ISC"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2",
+    "nodemailer": "^6.10.1"
+  }
 }
